@@ -148,7 +148,12 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
             selected={{ from: date.from, to: date.to }}
             onSelect={(newDate) => {
               if (newDate) {
-                const updatedDate: DateRange = { ...newDate, preset: "custom" };
+                // Ensure the to property is always defined
+                const updatedDate: DateRange = { 
+                  from: newDate.from, 
+                  to: newDate.to || newDate.from, // If to is undefined, use from
+                  preset: "custom" 
+                };
                 setDate(updatedDate);
                 setSelectedPreset("custom");
                 if (onChange) onChange(updatedDate);
