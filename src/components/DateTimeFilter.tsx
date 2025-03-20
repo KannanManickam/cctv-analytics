@@ -70,8 +70,7 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
         break;
       case "custom":
         // Don't change the date range, just switch to custom mode
-        newRange = date;
-        newRange.preset = "custom";
+        newRange = {...date, preset: "custom"};
         setIsCalendarOpen(true);
         break;
     }
@@ -149,7 +148,7 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
             selected={{ from: date.from, to: date.to }}
             onSelect={(newDate) => {
               if (newDate) {
-                const updatedDate = { ...newDate, preset: "custom" };
+                const updatedDate: DateRange = { ...newDate, preset: "custom" };
                 setDate(updatedDate);
                 setSelectedPreset("custom");
                 if (onChange) onChange(updatedDate);

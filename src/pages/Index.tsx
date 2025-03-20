@@ -5,7 +5,7 @@ import CountCard from "@/components/CountCard";
 import DemographicsChart from "@/components/DemographicsChart";
 import LocationFilter from "@/components/LocationFilter";
 import DateTimeFilter from "@/components/DateTimeFilter";
-import { Camera, ChevronUp, AreaChart, UserSquare, Users } from "lucide-react";
+import { Camera, ChevronUp, AreaChart as AreaChartIcon, UserSquare, Users } from "lucide-react";
 import { trafficData, genderData, ageData } from "@/utils/mockData";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,7 +19,7 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  AreaSeries,
+  AreaChart,
   Area
 } from "recharts";
 import { cn } from "@/lib/utils";
@@ -141,7 +141,7 @@ const Index = () => {
           {/* Traffic flow chart */}
           <div className="space-y-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>
             <div className="flex items-center">
-              <AreaChart className="h-5 w-5 mr-2 text-primary" />
+              <AreaChartIcon className="h-5 w-5 mr-2 text-primary" />
               <h2 className="text-lg font-semibold tracking-tight">Traffic Flow</h2>
             </div>
             <Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden border border-gray-100 dark:border-gray-800/50 shadow-md">
