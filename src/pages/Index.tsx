@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import CountCard from "@/components/CountCard";
@@ -25,7 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 
 // Format hourly data for the chart
-const formatHourlyData = (dateRange) => {
+const formatHourlyData = (dateRange = { preset: "today" }) => {
   // In a real app, we would filter by date range here
   // For demo purposes, we'll just return the full dataset
   return trafficData.hourlyData.map((item) => ({
@@ -38,9 +37,6 @@ const formatHourlyData = (dateRange) => {
 
 // Mock function to get filtered traffic data based on location and date range
 const getFilteredTrafficData = (location, locationType, dateRange) => {
-  // In a real app, this would call an API or filter stored data
-  // For demo purposes, we'll simulate different values for different selections
-  
   let multiplier = 1;
   
   // Apply location-based filtering
@@ -72,10 +68,12 @@ const getFilteredTrafficData = (location, locationType, dateRange) => {
   else if (dateRange.preset === '90days') dateMultiplier = 1.5;
   else if (dateRange.preset === 'ytd') dateMultiplier = 1.7;
   
-  // Apply multipliers to traffic data
+  // Apply the multipliers to traffic data but maintain the full structure
   const finalMultiplier = multiplier * dateMultiplier;
   
   return {
+    totalIn: Math.round(trafficData.totalIn * finalMultiplier),
+    totalOut: Math.round(trafficData.totalOut * finalMultiplier),
     today: {
       in: Math.round(trafficData.today.in * finalMultiplier),
       out: Math.round(trafficData.today.out * finalMultiplier)
@@ -88,15 +86,17 @@ const getFilteredTrafficData = (location, locationType, dateRange) => {
       hour: hour.hour,
       in: Math.round(hour.in * finalMultiplier),
       out: Math.round(hour.out * finalMultiplier)
+    })),
+    weeklyData: trafficData.weeklyData.map(day => ({
+      day: day.day,
+      in: Math.round(day.in * finalMultiplier),
+      out: Math.round(day.out * finalMultiplier)
     }))
   };
 };
 
 // Mock function to get filtered demographic data
 const getFilteredDemographicData = (location, locationType, dateRange) => {
-  // In a real app, this would filter based on location and date
-  // For demo purposes, we'll simulate different values for different selections
-  
   let malePercentage = genderData.male;
   
   // Apply location-based adjustments
@@ -113,7 +113,11 @@ const getFilteredDemographicData = (location, locationType, dateRange) => {
   return {
     gender: {
       male: malePercentage,
-      female: 100 - malePercentage
+      female: 100 - malePercentage,
+      weeklyTrend: genderData.weeklyTrend.map(trend => ({
+        male: Math.min(60, Math.max(40, trend.male + (location.charCodeAt(0) % 5 - 2))),
+        female: Math.min(60, Math.max(40, trend.female + (location.charCodeAt(0) % 5 - 2)))
+      }))
     },
     age: {
       "0-17": Math.max(5, Math.min(25, ageData["0-17"] + (location.charCodeAt(0) % 5))),
@@ -121,7 +125,15 @@ const getFilteredDemographicData = (location, locationType, dateRange) => {
       "25-34": Math.max(15, Math.min(35, ageData["25-34"] + (location.charCodeAt(0) % 4))),
       "35-44": Math.max(15, Math.min(30, ageData["35-44"] + (location.charCodeAt(1) % 3))),
       "45-54": Math.max(10, Math.min(25, ageData["45-54"] + (location.charCodeAt(0) % 4))),
-      "55+": Math.max(5, Math.min(20, ageData["55+"] + (location.charCodeAt(1) % 5)))
+      "55+": Math.max(5, Math.min(20, ageData["55+"] + (location.charCodeAt(1) % 5))),
+      weeklyTrend: ageData.weeklyTrend.map(trend => ({
+        "0-17": Math.max(5, Math.min(15, trend["0-17"] + (location.charCodeAt(0) % 3))),
+        "18-24": Math.max(15, Math.min(25, trend["18-24"] + (location.charCodeAt(1) % 3))),
+        "25-34": Math.max(20, Math.min(30, trend["25-34"] + (location.charCodeAt(0) % 3))),
+        "35-44": Math.max(10, Math.min(20, trend["35-44"] + (location.charCodeAt(1) % 3))),
+        "45-54": Math.max(5, Math.min(15, trend["45-54"] + (location.charCodeAt(0) % 3))),
+        "55+": Math.max(5, Math.min(15, trend["55+"] + (location.charCodeAt(1) % 3)))
+      }))
     }
   };
 };
@@ -140,7 +152,7 @@ const Index = () => {
   
   // Filtered data states
   const [filteredTraffic, setFilteredTraffic] = useState(trafficData);
-  const [filteredChartData, setFilteredChartData] = useState(formatHourlyData());
+  const [filteredChartData, setFilteredChartData] = useState(formatHourlyData(selectedDateRange));
   const [filteredGender, setFilteredGender] = useState(genderData);
   const [filteredAge, setFilteredAge] = useState(ageData);
   
