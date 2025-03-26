@@ -1,8 +1,15 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { cn } from "@/lib/utils";
+import { Info } from "lucide-react";
+import {
+  Tooltip as TooltipUI,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ChartData {
   name: string;
@@ -46,6 +53,23 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
     );
   };
 
+  // Custom tooltip component for pie chart
+  const CustomPieTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="fancy-blur rounded-lg p-2 text-sm shadow-md border border-gray-200 dark:border-gray-800 min-w-[120px]">
+          <p className="font-medium">{data.name}</p>
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-muted-foreground text-xs">Percentage:</span>
+            <span className="font-medium">{data.value}%</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card className={cn(
       "perspective-hover border overflow-hidden shadow-md",
@@ -54,7 +78,21 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
       className
     )}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          <TooltipProvider>
+            <TooltipUI>
+              <TooltipTrigger asChild>
+                <Info className="h-4 w-4 text-muted-foreground/70 hover:text-primary cursor-help transition-colors" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-[200px] text-xs">
+                {type === "gender" 
+                  ? "Gender distribution of visitors based on AI detection" 
+                  : "Age distribution of visitors based on AI detection"}
+              </TooltipContent>
+            </TooltipUI>
+          </TooltipProvider>
+        </div>
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </CardHeader>
       <CardContent className="p-3">
@@ -82,6 +120,7 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
                   />
                 ))}
               </Pie>
+              <Tooltip content={<CustomPieTooltip />} />
               <Legend 
                 content={renderCustomizedLegend}
                 layout="vertical"
