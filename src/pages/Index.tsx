@@ -25,7 +25,9 @@ import {
 import { cn } from "@/lib/utils";
 
 // Format hourly data for the chart
-const formatHourlyData = () => {
+const formatHourlyData = (dateRange) => {
+  // In a real app, we would filter by date range here
+  // For demo purposes, we'll just return the full dataset
   return trafficData.hourlyData.map((item) => ({
     name: `${item.hour}:00`,
     In: item.in,
@@ -34,32 +36,177 @@ const formatHourlyData = () => {
   }));
 };
 
+// Mock function to get filtered traffic data based on location and date range
+const getFilteredTrafficData = (location, locationType, dateRange) => {
+  // In a real app, this would call an API or filter stored data
+  // For demo purposes, we'll simulate different values for different selections
+  
+  let multiplier = 1;
+  
+  // Apply location-based filtering
+  if (locationType === 'store') {
+    // Each store has a different traffic pattern
+    if (location === 'Store 001') multiplier = 1;
+    else if (location === 'Store 002') multiplier = 0.8;
+    else if (location === 'Store 003') multiplier = 1.2;
+    else multiplier = 0.9;
+  } else if (locationType === 'city') {
+    // Cities have their own patterns
+    if (location === 'New York') multiplier = 1.5;
+    else if (location === 'Los Angeles') multiplier = 1.3;
+    else if (location === 'Chicago') multiplier = 0.9;
+    else multiplier = 1.1;
+  } else if (locationType === 'region') {
+    // Regions have broader patterns
+    if (location === 'Northeast') multiplier = 1.4;
+    else if (location === 'West') multiplier = 1.2;
+    else if (location === 'Midwest') multiplier = 0.8;
+    else multiplier = 1;
+  }
+  
+  // Apply date-based filtering
+  let dateMultiplier = 1;
+  if (dateRange.preset === 'yesterday') dateMultiplier = 0.9;
+  else if (dateRange.preset === '7days') dateMultiplier = 1.1;
+  else if (dateRange.preset === '30days') dateMultiplier = 1.3;
+  else if (dateRange.preset === '90days') dateMultiplier = 1.5;
+  else if (dateRange.preset === 'ytd') dateMultiplier = 1.7;
+  
+  // Apply multipliers to traffic data
+  const finalMultiplier = multiplier * dateMultiplier;
+  
+  return {
+    today: {
+      in: Math.round(trafficData.today.in * finalMultiplier),
+      out: Math.round(trafficData.today.out * finalMultiplier)
+    },
+    yesterday: {
+      in: Math.round(trafficData.yesterday.in * finalMultiplier * 0.9),
+      out: Math.round(trafficData.yesterday.out * finalMultiplier * 0.9)
+    },
+    hourlyData: trafficData.hourlyData.map(hour => ({
+      hour: hour.hour,
+      in: Math.round(hour.in * finalMultiplier),
+      out: Math.round(hour.out * finalMultiplier)
+    }))
+  };
+};
+
+// Mock function to get filtered demographic data
+const getFilteredDemographicData = (location, locationType, dateRange) => {
+  // In a real app, this would filter based on location and date
+  // For demo purposes, we'll simulate different values for different selections
+  
+  let malePercentage = genderData.male;
+  
+  // Apply location-based adjustments
+  if (locationType === 'store') {
+    if (location === 'Store 001') malePercentage = 55;
+    else if (location === 'Store 002') malePercentage = 48;
+    else if (location === 'Store 003') malePercentage = 52;
+  } else if (locationType === 'city') {
+    if (location === 'New York') malePercentage = 49;
+    else if (location === 'Los Angeles') malePercentage = 51;
+    else if (location === 'Chicago') malePercentage = 47;
+  }
+  
+  return {
+    gender: {
+      male: malePercentage,
+      female: 100 - malePercentage
+    },
+    age: {
+      "0-17": Math.max(5, Math.min(25, ageData["0-17"] + (location.charCodeAt(0) % 5))),
+      "18-24": Math.max(10, Math.min(30, ageData["18-24"] + (location.charCodeAt(1) % 6))),
+      "25-34": Math.max(15, Math.min(35, ageData["25-34"] + (location.charCodeAt(0) % 4))),
+      "35-44": Math.max(15, Math.min(30, ageData["35-44"] + (location.charCodeAt(1) % 3))),
+      "45-54": Math.max(10, Math.min(25, ageData["45-54"] + (location.charCodeAt(0) % 4))),
+      "55+": Math.max(5, Math.min(20, ageData["55+"] + (location.charCodeAt(1) % 5)))
+    }
+  };
+};
+
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [chartData, setChartData] = useState(formatHourlyData());
+  
+  // Add state for filters
+  const [selectedLocation, setSelectedLocation] = useState('Store 001');
+  const [selectedLocationType, setSelectedLocationType] = useState('store');
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    from: new Date(new Date().setHours(0, 0, 0, 0)),
+    to: new Date(),
+    preset: "today"
+  });
+  
+  // Filtered data states
+  const [filteredTraffic, setFilteredTraffic] = useState(trafficData);
+  const [filteredChartData, setFilteredChartData] = useState(formatHourlyData());
+  const [filteredGender, setFilteredGender] = useState(genderData);
+  const [filteredAge, setFilteredAge] = useState(ageData);
+  
+  // Update data when filters change
+  useEffect(() => {
+    // Get filtered traffic data
+    const newTrafficData = getFilteredTrafficData(
+      selectedLocation, 
+      selectedLocationType, 
+      selectedDateRange
+    );
+    setFilteredTraffic(newTrafficData);
+    
+    // Update chart data
+    const newChartData = newTrafficData.hourlyData.map((item) => ({
+      name: `${item.hour}:00`,
+      In: item.in,
+      Out: item.out,
+      Total: item.in + item.out,
+    }));
+    setFilteredChartData(newChartData);
+    
+    // Get filtered demographic data
+    const demographicData = getFilteredDemographicData(
+      selectedLocation, 
+      selectedLocationType, 
+      selectedDateRange
+    );
+    setFilteredGender(demographicData.gender);
+    setFilteredAge(demographicData.age);
+    
+  }, [selectedLocation, selectedLocationType, selectedDateRange]);
   
   // Gender chart data
   const genderChartData = [
-    { name: "Male", value: genderData.male, color: "#3b82f6" },
-    { name: "Female", value: genderData.female, color: "#ec4899" },
+    { name: "Male", value: filteredGender.male, color: "#3b82f6" },
+    { name: "Female", value: filteredGender.female, color: "#ec4899" },
   ];
   
   // Age chart data
   const ageChartData = [
-    { name: "0-17", value: ageData["0-17"], color: "#60a5fa" },
-    { name: "18-24", value: ageData["18-24"], color: "#34d399" },
-    { name: "25-34", value: ageData["25-34"], color: "#a78bfa" },
-    { name: "35-44", value: ageData["35-44"], color: "#fbbf24" },
-    { name: "45-54", value: ageData["45-54"], color: "#f87171" },
-    { name: "55+", value: ageData["55+"], color: "#6b7280" }
+    { name: "0-17", value: filteredAge["0-17"], color: "#60a5fa" },
+    { name: "18-24", value: filteredAge["18-24"], color: "#34d399" },
+    { name: "25-34", value: filteredAge["25-34"], color: "#a78bfa" },
+    { name: "35-44", value: filteredAge["35-44"], color: "#fbbf24" },
+    { name: "45-54", value: filteredAge["45-54"], color: "#f87171" },
+    { name: "55+", value: filteredAge["55+"], color: "#6b7280" }
   ];
 
   // Calculate daily change percentage
   const calculateChange = (type: "in" | "out") => {
-    const today = trafficData.today[type];
-    const yesterday = trafficData.yesterday[type];
+    const today = filteredTraffic.today[type];
+    const yesterday = filteredTraffic.yesterday[type];
     const change = ((today - yesterday) / yesterday) * 100;
     return change;
+  };
+
+  // Handle location filter change
+  const handleLocationChange = (location: string, type: 'store' | 'city' | 'region' | 'global') => {
+    setSelectedLocation(location);
+    setSelectedLocationType(type);
+  };
+  
+  // Handle date filter change
+  const handleDateChange = (dateRange: any) => {
+    setSelectedDateRange(dateRange);
   };
 
   // Listen for scroll events
@@ -108,8 +255,8 @@ const Index = () => {
             isScrolled && "shadow-sm border-b border-gray-100 dark:border-gray-800/50"
           )}>
             <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-              <LocationFilter />
-              <DateTimeFilter />
+              <LocationFilter onChange={handleLocationChange} />
+              <DateTimeFilter onChange={handleDateChange} />
             </div>
           </div>
 
@@ -117,21 +264,21 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
             <CountCard 
               title="Total In" 
-              value={trafficData.today.in} 
+              value={filteredTraffic.today.in} 
               change={calculateChange("in")} 
               type="in"
               icon="in"
             />
             <CountCard 
               title="Total Out" 
-              value={trafficData.today.out} 
+              value={filteredTraffic.today.out} 
               change={calculateChange("out")} 
               type="out"
               icon="out"
             />
             <CountCard 
               title="Total Visitors" 
-              value={trafficData.today.in + trafficData.today.out} 
+              value={filteredTraffic.today.in + filteredTraffic.today.out} 
               change={(calculateChange("in") + calculateChange("out")) / 2} 
               type="total"
               icon="total"
@@ -149,7 +296,7 @@ const Index = () => {
                 <div className="h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
-                      data={chartData}
+                      data={filteredChartData}
                       margin={{ top: 10, right: 20, left: 0, bottom: 0 }}
                     >
                       <defs>
