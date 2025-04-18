@@ -26,10 +26,10 @@ const Header: React.FC<HeaderProps> = ({ className, toggleSidebar }) => {
         </Button>
         <div className="flex items-center gap-2 md:gap-3">
           <div className="bg-primary/10 rounded-md p-1.5">
-            <Camera className="h-5 w-5 text-primary" />
+            <Camera className="h-5 w-5 text-primary" color="#DD3E62" />
           </div>
           <div className="flex flex-col">
-            <h1 className="text-lg font-semibold tracking-tight">
+            <h1 className="text-lg font-semibold tracking-tight" >
               CCTV Analytics
             </h1>
             <p className="text-xs text-muted-foreground">

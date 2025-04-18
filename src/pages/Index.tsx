@@ -61,11 +61,11 @@ const Index = () => {
 
 	// Age chart data
 	const ageChartData = [
-		{ name: "0-19", value: filteredAge["0-19"], color: "#60a5fa" },
-		{ name: "20-29", value: filteredAge["20-29"], color: "#34d399" },
-		{ name: "30-39", value: filteredAge["30-39"], color: "#a78bfa" },
-		{ name: "40-49", value: filteredAge["40-49"], color: "#fbbf24" },
-		{ name: "50+", value: filteredAge["50+"], color: "#f87171" },
+		{ name: "0-19", value: filteredAge["0-19"], color: "#fa3c67" },
+		{ name: "20-29", value: filteredAge["20-29"], color: "#e80739" },
+		{ name: "30-39", value: filteredAge["30-39"], color: "#e3aab7" },
+		{ name: "40-49", value: filteredAge["40-49"], color: "#e8748e" },
+		{ name: "50+", value: filteredAge["50+"], color: "#DD3E62" }, // 👈 updated here
 	];
 
 	// Handle location filter change
@@ -108,8 +108,8 @@ const Index = () => {
 				const { age, gender, graph, summary } = response.data;
 
 				const genderData = [
-					{ name: "Male", value: parseFloat(gender?.male), color: "#3b82f6" },
-					{ name: "Female", value: parseFloat(gender?.female), color: "#ec4899" },
+					{ name: "Male", value: parseFloat(gender?.male), color: "#DD3E62" },
+					{ name: "Female", value: parseFloat(gender?.female), color: "#e8748e" },
 				];
 				setGenderChartData(genderData);
 
@@ -231,12 +231,12 @@ const Index = () => {
 										>
 											<defs>
 												<linearGradient id="colorIn" x1="0" y1="0" x2="0" y2="1">
-													<stop offset="5%" stopColor="#34d399" stopOpacity={0.3} />
-													<stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+													<stop offset="5%" stopColor="#DD3E62" stopOpacity={0.3} />
+													<stop offset="95%" stopColor="#DD3E62" stopOpacity={0} />
 												</linearGradient>
 												<linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-													<stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-													<stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+													<stop offset="5%" stopColor="#de6f88" stopOpacity={0.3} />
+													<stop offset="95%" stopColor="#de6f88" stopOpacity={0} />
 												</linearGradient>
 											</defs>
 											<CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -256,7 +256,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="In"
-												stroke="#34d399"
+												stroke="#73001a"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorIn)"
@@ -265,7 +265,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="Out"
-												stroke="#3b82f6"
+												stroke="#DD3E62"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorOut)"

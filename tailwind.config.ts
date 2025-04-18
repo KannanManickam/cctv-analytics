@@ -20,15 +20,20 @@ export default {
 		},
 		extend: {
 			colors: {
+				
+				primary: {
+					DEFAULT: "#DD3E62", // This becomes `bg-primary`
+					foreground: "#ffffff" // Optional: For `text-primary-foreground`
+				  },
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
-				},
+				// primary: {
+				// 	DEFAULT: 'hsl(var(--primary))',
+				// 	foreground: 'hsl(var(--primary-foreground))'
+				// },
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
