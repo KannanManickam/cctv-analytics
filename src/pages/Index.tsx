@@ -22,6 +22,9 @@ import {
 	Area
 } from "recharts";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+
+import data from "@/utils/data.json";
 
 // Format hourly data for the chart
 const formatHourlyData = (dateRange = { preset: "today" }) => {
@@ -35,115 +38,15 @@ const formatHourlyData = (dateRange = { preset: "today" }) => {
 	}));
 };
 
-// Mock function to get filtered traffic data based on location and date range
-const getFilteredTrafficData = (location, locationType, dateRange) => {
-	let multiplier = 1;
-
-	// Apply location-based filtering
-	if (locationType === 'store') {
-		// Each store has a different traffic pattern
-		if (location === 'Store 001') multiplier = 1;
-		else if (location === 'Store 002') multiplier = 0.8;
-		else if (location === 'Store 003') multiplier = 1.2;
-		else multiplier = 0.9;
-	} else if (locationType === 'city') {
-		// Cities have their own patterns
-		if (location === 'New York') multiplier = 1.5;
-		else if (location === 'Los Angeles') multiplier = 1.3;
-		else if (location === 'Chicago') multiplier = 0.9;
-		else multiplier = 1.1;
-	} else if (locationType === 'region') {
-		// Regions have broader patterns
-		if (location === 'Northeast') multiplier = 1.4;
-		else if (location === 'West') multiplier = 1.2;
-		else if (location === 'Midwest') multiplier = 0.8;
-		else multiplier = 1;
-	}
-
-	// Apply date-based filtering
-	let dateMultiplier = 1;
-	if (dateRange.preset === 'yesterday') dateMultiplier = 0.9;
-	else if (dateRange.preset === '7days') dateMultiplier = 1.1;
-	else if (dateRange.preset === '30days') dateMultiplier = 1.3;
-	else if (dateRange.preset === '90days') dateMultiplier = 1.5;
-	else if (dateRange.preset === 'ytd') dateMultiplier = 1.7;
-
-	// Apply the multipliers to traffic data but maintain the full structure
-	const finalMultiplier = multiplier * dateMultiplier;
-
-	return {
-		totalIn: Math.round(trafficData.totalIn * finalMultiplier),
-		totalOut: Math.round(trafficData.totalOut * finalMultiplier),
-		today: {
-			in: Math.round(trafficData.today.in * finalMultiplier),
-			out: Math.round(trafficData.today.out * finalMultiplier)
-		},
-		yesterday: {
-			in: Math.round(trafficData.yesterday.in * finalMultiplier * 0.9),
-			out: Math.round(trafficData.yesterday.out * finalMultiplier * 0.9)
-		},
-		hourlyData: trafficData.hourlyData.map(hour => ({
-			hour: hour.hour,
-			in: Math.round(hour.in * finalMultiplier),
-			out: Math.round(hour.out * finalMultiplier)
-		})),
-		weeklyData: trafficData.weeklyData.map(day => ({
-			day: day.day,
-			in: Math.round(day.in * finalMultiplier),
-			out: Math.round(day.out * finalMultiplier)
-		}))
-	};
-};
-
-// Mock function to get filtered demographic data
-const getFilteredDemographicData = (location, locationType, dateRange) => {
-	let malePercentage = genderData.male;
-
-	// Apply location-based adjustments
-	if (locationType === 'store') {
-		if (location === 'Store 001') malePercentage = 55;
-		else if (location === 'Store 002') malePercentage = 48;
-		else if (location === 'Store 003') malePercentage = 52;
-	} else if (locationType === 'city') {
-		if (location === 'New York') malePercentage = 49;
-		else if (location === 'Los Angeles') malePercentage = 51;
-		else if (location === 'Chicago') malePercentage = 47;
-	}
-
-	return {
-		gender: {
-			male: malePercentage,
-			female: 100 - malePercentage,
-			weeklyTrend: genderData.weeklyTrend.map(trend => ({
-				male: Math.min(60, Math.max(40, trend.male + (location.charCodeAt(0) % 5 - 2))),
-				female: Math.min(60, Math.max(40, trend.female + (location.charCodeAt(0) % 5 - 2)))
-			}))
-		},
-		age: {
-			"0-17": Math.max(5, Math.min(25, ageData["0-17"] + (location.charCodeAt(0) % 5))),
-			"18-24": Math.max(10, Math.min(30, ageData["18-24"] + (location.charCodeAt(1) % 6))),
-			"25-34": Math.max(15, Math.min(35, ageData["25-34"] + (location.charCodeAt(0) % 4))),
-			"35-44": Math.max(15, Math.min(30, ageData["35-44"] + (location.charCodeAt(1) % 3))),
-			"45-54": Math.max(10, Math.min(25, ageData["45-54"] + (location.charCodeAt(0) % 4))),
-			"55+": Math.max(5, Math.min(20, ageData["55+"] + (location.charCodeAt(1) % 5))),
-			weeklyTrend: ageData.weeklyTrend.map(trend => ({
-				"0-17": Math.max(5, Math.min(15, trend["0-17"] + (location.charCodeAt(0) % 3))),
-				"18-24": Math.max(15, Math.min(25, trend["18-24"] + (location.charCodeAt(1) % 3))),
-				"25-34": Math.max(20, Math.min(30, trend["25-34"] + (location.charCodeAt(0) % 3))),
-				"35-44": Math.max(10, Math.min(20, trend["35-44"] + (location.charCodeAt(1) % 3))),
-				"45-54": Math.max(5, Math.min(15, trend["45-54"] + (location.charCodeAt(0) % 3))),
-				"55+": Math.max(5, Math.min(15, trend["55+"] + (location.charCodeAt(1) % 3)))
-			}))
-		}
-	};
-};
-
 const Index = () => {
 	const [isScrolled, setIsScrolled] = useState(false);
 
 	// Add state for filters
 	const [selectedLocation, setSelectedLocation] = useState('Store 001');
-	const [selectedLocationType, setSelectedLocationType] = useState('store');
+
+	const [selectedLocationId, setSelectedLocationId] = useState<string>(""); // store the ID
+	const [selectedLocationType, setSelectedLocationType] = useState<'store' | 'city' | 'region' | 'global'>("store");
+
 	const [selectedDateRange, setSelectedDateRange] = useState({
 		from: new Date(new Date().setHours(0, 0, 0, 0)),
 		to: new Date(),
@@ -151,75 +54,88 @@ const Index = () => {
 	});
 
 	// Filtered data states
-	const [filteredTraffic, setFilteredTraffic] = useState(trafficData);
+	const [filteredTraffic, setFilteredTraffic] = useState(null);
 	const [filteredChartData, setFilteredChartData] = useState(formatHourlyData(selectedDateRange));
-	const [filteredGender, setFilteredGender] = useState(genderData);
-	const [filteredAge, setFilteredAge] = useState(ageData);
-
-	// Update data when filters change
-	useEffect(() => {
-		// Get filtered traffic data
-		const newTrafficData = getFilteredTrafficData(
-			selectedLocation,
-			selectedLocationType,
-			selectedDateRange
-		);
-		setFilteredTraffic(newTrafficData);
-
-		// Update chart data
-		const newChartData = newTrafficData.hourlyData.map((item) => ({
-			name: `${item.hour}:00`,
-			In: item.in,
-			Out: item.out,
-			Total: item.in + item.out,
-		}));
-		setFilteredChartData(newChartData);
-
-		// Get filtered demographic data
-		const demographicData = getFilteredDemographicData(
-			selectedLocation,
-			selectedLocationType,
-			selectedDateRange
-		);
-		setFilteredGender(demographicData.gender);
-		setFilteredAge(demographicData.age);
-
-	}, [selectedLocation, selectedLocationType, selectedDateRange]);
-
-	// Gender chart data
-	const genderChartData = [
-		{ name: "Male", value: filteredGender.male, color: "#3b82f6" },
-		{ name: "Female", value: filteredGender.female, color: "#ec4899" },
-	];
+	const [filteredAge, setFilteredAge] = useState({});
+	const [genderChartData, setGenderChartData] = useState([]);
 
 	// Age chart data
 	const ageChartData = [
-		{ name: "0-17", value: filteredAge["0-17"], color: "#60a5fa" },
-		{ name: "18-24", value: filteredAge["18-24"], color: "#34d399" },
-		{ name: "25-34", value: filteredAge["25-34"], color: "#a78bfa" },
-		{ name: "35-44", value: filteredAge["35-44"], color: "#fbbf24" },
-		{ name: "45-54", value: filteredAge["45-54"], color: "#f87171" },
-		{ name: "55+", value: filteredAge["55+"], color: "#6b7280" }
+		{ name: "0-19", value: filteredAge["0-19"], color: "#60a5fa" },
+		{ name: "20-29", value: filteredAge["20-29"], color: "#34d399" },
+		{ name: "30-39", value: filteredAge["30-39"], color: "#a78bfa" },
+		{ name: "40-49", value: filteredAge["40-49"], color: "#fbbf24" },
+		{ name: "50+", value: filteredAge["50+"], color: "#f87171" },
 	];
 
-	// Calculate daily change percentage
-	const calculateChange = (type: "in" | "out") => {
-		const today = filteredTraffic.today[type];
-		const yesterday = filteredTraffic.yesterday[type];
-		const change = ((today - yesterday) / yesterday) * 100;
-		return change;
-	};
-
 	// Handle location filter change
-	const handleLocationChange = (location: string, type: 'store' | 'city' | 'region' | 'global') => {
-		setSelectedLocation(location);
-		setSelectedLocationType(type);
+	const handleLocationChange = (locationId: string, type: 'store' | 'city' | 'region' | 'global') => {
+		setSelectedLocationId(locationId); // store ID
+		setSelectedLocationType(type);     // store type
 	};
 
 	// Handle date filter change
 	const handleDateChange = (dateRange: any) => {
 		setSelectedDateRange(dateRange);
 	};
+
+	useEffect(() => {
+		const fetchTrafficData = async () => {
+			try {
+				const fromDate = new Date(selectedDateRange.from).toISOString().slice(0, 10);
+				const toDate = new Date(selectedDateRange.to).toISOString().slice(0, 10);
+
+				// params: {
+				// 	store_id: 1,
+				// 	region_id: 1,
+				// 	city_id: 1,
+				// 	global_id: 1,
+				// 	from: fromDate,
+				// 	to: toDate
+				// }
+
+				const params: any = {
+					from: fromDate,
+					to: toDate,
+				};
+
+				if (selectedLocationId && selectedLocationType) {
+					params[`${selectedLocationType}_id`] = selectedLocationId;
+				}
+
+				const response = await axios.get('https://sfs-dashboard-api-production.up.railway.app/traffic', { params });
+
+				const { age, gender, graph, summary } = response.data;
+
+				const genderData = [
+					{ name: "Male", value: parseFloat(gender?.male), color: "#3b82f6" },
+					{ name: "Female", value: parseFloat(gender?.female), color: "#ec4899" },
+				];
+				setGenderChartData(genderData);
+
+				const rangeValue = {};
+				age.forEach(item => {
+					rangeValue[item.range] = parseFloat(item.percent);
+				});
+
+				const newChartData = graph.map((item) => ({
+					name: item.hour,
+					In: item.in,
+					Out: item.out,
+					Total: item.in + item.out,
+				}));
+
+				setFilteredAge(rangeValue);
+				setFilteredTraffic(summary);
+				setFilteredChartData(newChartData);
+			} catch (error) {
+				console.error('Error fetching traffic data:', error);
+			}
+		};
+
+		fetchTrafficData();
+	}, [selectedLocationId, selectedLocationType, selectedDateRange]);
+
 
 	// Listen for scroll events
 	useEffect(() => {
@@ -273,29 +189,31 @@ const Index = () => {
 					</div>
 
 					{/* Stats cards */}
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-						<CountCard
-							title="Total In"
-							value={filteredTraffic.today.in}
-							change={calculateChange("in")}
-							type="in"
-							icon="in"
-						/>
-						<CountCard
-							title="Total Out"
-							value={filteredTraffic.today.out}
-							change={calculateChange("out")}
-							type="out"
-							icon="out"
-						/>
-						<CountCard
-							title="Total Visitors"
-							value={filteredTraffic.today.in + filteredTraffic.today.out}
-							change={(calculateChange("in") + calculateChange("out")) / 2}
-							type="total"
-							icon="total"
-						/>
-					</div>
+					{filteredTraffic && (
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+							<CountCard
+								title="Total In"
+								value={Number(filteredTraffic?.total_in?.count)}
+								change={parseFloat(filteredTraffic?.total_in?.change)}
+								type="in"
+								icon="in"
+							/>
+							<CountCard
+								title="Total Out"
+								value={filteredTraffic.total_out.count}
+								change={parseFloat(filteredTraffic?.total_out?.change)}
+								type="out"
+								icon="out"
+							/>
+							<CountCard
+								title="Total Visitors"
+								value={filteredTraffic.total_visitors.count}
+								change={parseFloat(filteredTraffic?.total_visitors?.change)}
+								type="total"
+								icon="total"
+							/>
+						</div>
+					)}
 
 					{/* Traffic flow chart */}
 					<div className="space-y-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>
@@ -367,16 +285,16 @@ const Index = () => {
 							<h2 className="text-lg font-semibold tracking-tight">Demographics</h2>
 						</div>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<DemographicsChart
+							{genderChartData && <DemographicsChart
 								title="Gender Distribution"
 								data={genderChartData}
 								type="gender"
-							/>
-							<DemographicsChart
+							/>}
+							{ageChartData && <DemographicsChart
 								title="Age Distribution"
 								data={ageChartData}
 								type="age"
-							/>
+							/>}
 						</div>
 					</div>
 
