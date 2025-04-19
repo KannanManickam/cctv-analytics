@@ -32,6 +32,10 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
   className,
   type = "gender"
 }) => {
+  const hasValidData = (data: ChartData[] = []) => {
+    return data.some(item => item?.value && item.value > 0);
+  };
+
   // Custom legend renderer
   const renderCustomizedLegend = ({ payload }: any) => {
     return (
@@ -86,8 +90,8 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
                 <Info className="h-4 w-4 text-muted-foreground/70 hover:text-primary cursor-help transition-colors" />
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-[200px] text-xs">
-                {type === "gender" 
-                  ? "Gender distribution of visitors based on AI detection" 
+                {type === "gender"
+                  ? "Gender distribution of visitors based on AI detection"
                   : "Age distribution of visitors based on AI detection"}
               </TooltipContent>
             </TooltipUI>
@@ -96,39 +100,43 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </CardHeader>
       <CardContent className="p-3">
-        <div className="h-[180px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={60}
-                innerRadius={type === "gender" ? 40 : 0}
-                dataKey="value"
-                animationBegin={100}
-                animationDuration={1000}
-                animationEasing="ease-out"
-              >
-                {data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.color} 
-                    stroke="none"
-                    className="hover:opacity-80 transition-opacity"
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomPieTooltip />} />
-              <Legend 
-                content={renderCustomizedLegend}
-                layout="vertical"
-                verticalAlign="middle"
-                align="right"
-              />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="h-[180px] w-full flex items-center justify-center">
+          {hasValidData(data) ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={60}
+                  innerRadius={type === "gender" ? 40 : 0}
+                  dataKey="value"
+                  animationBegin={100}
+                  animationDuration={1000}
+                  animationEasing="ease-out"
+                >
+                  {data.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      stroke="none"
+                      className="hover:opacity-80 transition-opacity"
+                    />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomPieTooltip />} />
+                <Legend
+                  content={renderCustomizedLegend}
+                  layout="vertical"
+                  verticalAlign="middle"
+                  align="right"
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-sm text-muted-foreground">No data available</p>
+          )}
         </div>
       </CardContent>
     </Card>

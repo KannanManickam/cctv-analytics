@@ -113,7 +113,7 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onChange, className }) 
           <Button
             key={type.id}
             variant={selectedType === type.id ? "default" : "ghost"}
-            className="px-3 h-9 text-xs"
+            className="px-3 h-9 text-xs hover:background-color-[#DD3E62]"
             onClick={() => handleChangeType(type.id as LocationType)}
           >
             {type.name}
@@ -128,9 +128,9 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onChange, className }) 
             className="w-[220px] justify-between bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-gray-300 dark:border-gray-700"
           >
             <div className="flex items-center truncate">
-              <span className="text-xs bg-primary/10 text-primary/90 px-2 py-0.5 rounded-full mr-2">
+              {/* <span className="text-xs bg-primary/10 text-primary/90 px-2 py-0.5 rounded-full mr-2 hover:text-white">
                 {selectedType}
-              </span>
+              </span> */}
               <MapPin className="h-4 w-4 opacity-70 mr-2" />
               <span className="truncate font-normal">
                 {selectedOption?.name || "Select location"}
@@ -153,12 +153,14 @@ const LocationFilter: React.FC<LocationFilterProps> = ({ onChange, className }) 
                     key={location.id}
                     value={location.id}
                     onSelect={() => handleSelectLocation(location.id)}
-                    className="flex justify-between items-center"
+                    className="flex justify-between items-center bg-white"
+                    style={{ backgroundColor: "white" }}
                   >
-                    <span>{location.name}</span>
+                    <span className="">{location.name}...</span>
                     {location.id === selectedLocationId && <Check className="h-4 w-4 text-primary" />}
                   </CommandItem>
                 ))}
+
               </CommandGroup>
             </CommandList>
           </Command>

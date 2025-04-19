@@ -111,7 +111,7 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
             variant="outline"
             className={cn(
               "justify-between w-full sm:w-auto bg-white/90 dark:bg-black/50 border-gray-200 dark:border-gray-800 backdrop-blur-sm",
-              "hover:bg-white dark:hover:bg-black/60"
+              "dark:hover:bg-black/60"
             )}
           >
             <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
                   "h-8 text-xs justify-start px-2",
                   selectedPreset === preset.id 
                     ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                    : "hover:bg-gray-100 dark:hover:bg-gray-800/80"
+                    : "dark:hover:bg-gray-800/80"
                 )}
                 onClick={() => handlePresetSelect(preset.id)}
               >

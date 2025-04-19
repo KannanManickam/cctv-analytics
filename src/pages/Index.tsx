@@ -76,6 +76,7 @@ const Index = () => {
 
 	// Handle date filter change
 	const handleDateChange = (dateRange: any) => {
+		console.log("Selected date range:", dateRange);
 		setSelectedDateRange(dateRange);
 	};
 
@@ -147,6 +148,10 @@ const Index = () => {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
 
+	const hasValidData = (data: ChartData[] = []) => {
+		return data.some(item => item?.value && item.value > 0);
+	};
+
 	// Custom tooltip for charts
 	const CustomTooltip = ({ active, payload, label }: any) => {
 		if (active && payload && payload.length) {
@@ -197,6 +202,7 @@ const Index = () => {
 								change={parseFloat(filteredTraffic?.total_in?.change)}
 								type="in"
 								icon="in"
+								preset={selectedDateRange.preset}
 							/>
 							<CountCard
 								title="Total Out"
@@ -204,6 +210,7 @@ const Index = () => {
 								change={parseFloat(filteredTraffic?.total_out?.change)}
 								type="out"
 								icon="out"
+								preset={selectedDateRange.preset}
 							/>
 							<CountCard
 								title="Total Visitors"
@@ -211,6 +218,7 @@ const Index = () => {
 								change={parseFloat(filteredTraffic?.total_visitors?.change)}
 								type="total"
 								icon="total"
+								preset={selectedDateRange.preset}
 							/>
 						</div>
 					)}
@@ -235,8 +243,8 @@ const Index = () => {
 													<stop offset="95%" stopColor="#DD3E62" stopOpacity={0} />
 												</linearGradient>
 												<linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-													<stop offset="5%" stopColor="#de6f88" stopOpacity={0.3} />
-													<stop offset="95%" stopColor="#de6f88" stopOpacity={0} />
+													<stop offset="5%" stopColor="#deabb6" stopOpacity={0.3} />
+													<stop offset="95%" stopColor="#deabb6" stopOpacity={0} />
 												</linearGradient>
 											</defs>
 											<CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -256,7 +264,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="In"
-												stroke="#73001a"
+												stroke="#deabb6"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorIn)"
@@ -265,7 +273,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="Out"
-												stroke="#DD3E62"
+												stroke="#db0938"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorOut)"
@@ -295,6 +303,8 @@ const Index = () => {
 								data={ageChartData}
 								type="age"
 							/>}
+
+
 						</div>
 					</div>
 

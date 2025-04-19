@@ -13,6 +13,7 @@ interface CountCardProps {
   type?: "in" | "out" | "total";
   className?: string;
   icon?: "in" | "out" | "total";
+  preset?: string;
 }
 
 const CountCard: React.FC<CountCardProps> = ({
@@ -22,7 +23,8 @@ const CountCard: React.FC<CountCardProps> = ({
   description,
   type = "total",
   className,
-  icon = "total"
+  icon = "total",
+  preset
 }) => {
   const iconMap = {
     in: <UserPlus className="h-5 w-5 text-emerald-500" />,
@@ -76,7 +78,7 @@ const CountCard: React.FC<CountCardProps> = ({
             )}>
               {isPositive && <ArrowUp className="h-3 w-3" />}
               {isNegative && <ArrowDown className="h-3 w-3" />}
-              <span>{Math.abs(change).toFixed(1)}% from yesterday</span>
+              <span>{Math.abs(change).toFixed(1)}% from {preset}</span>
             </p>
           )}
           {description && (
