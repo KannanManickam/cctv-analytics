@@ -118,7 +118,7 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
                 >
                   {data.map((entry, index) => (
                     <Cell
-                      key={`cell-${index}`}
+                      key={entry?.id}
                       fill={entry.color}
                       stroke="none"
                       className="hover:opacity-80 transition-opacity"

@@ -61,12 +61,13 @@ const Index = () => {
 
 	// Age chart data
 	const ageChartData = [
-		{ name: "0-19", value: filteredAge["0-19"], color: "#fa3c67" },
-		{ name: "20-29", value: filteredAge["20-29"], color: "#e80739" },
-		{ name: "30-39", value: filteredAge["30-39"], color: "#e3aab7" },
-		{ name: "40-49", value: filteredAge["40-49"], color: "#e8748e" },
-		{ name: "50+", value: filteredAge["50+"], color: "#DD3E62" }, // 👈 updated here
-	];
+		{ id: 1, name: "0-19", value: filteredAge["0-19"], color: "#B8335A" }, // Darkest
+		{ id: 2, name: "20-29", value: filteredAge["20-29"], color: "#D96D7B" },
+		{ id: 3, name: "30-39", value: filteredAge["30-39"], color: "#F29A8B" },
+		{ id: 4, name: "40-49", value: filteredAge["40-49"], color: "#F7BBB6" },
+		{ id: 5, name: "50+", value: filteredAge["50+"], color: "#FFD7D2" },   // Lightest
+	].sort((a, b) => a.id - b.id); // Ensure data stays in proper order
+
 
 	// Handle location filter change
 	const handleLocationChange = (locationId: string, type: 'store' | 'city' | 'region' | 'global') => {
@@ -243,8 +244,8 @@ const Index = () => {
 													<stop offset="95%" stopColor="#DD3E62" stopOpacity={0} />
 												</linearGradient>
 												<linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-													<stop offset="5%" stopColor="#deabb6" stopOpacity={0.3} />
-													<stop offset="95%" stopColor="#deabb6" stopOpacity={0} />
+													<stop offset="5%" stopColor="#A91F40" stopOpacity={0.3} />
+													<stop offset="95%" stopColor="#A91F40" stopOpacity={0} />
 												</linearGradient>
 											</defs>
 											<CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -264,7 +265,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="In"
-												stroke="#deabb6"
+												stroke="#A91F40"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorIn)"
@@ -273,7 +274,7 @@ const Index = () => {
 											<Area
 												type="monotone"
 												dataKey="Out"
-												stroke="#db0938"
+												stroke="#ff4771"
 												strokeWidth={2}
 												fillOpacity={1}
 												fill="url(#colorOut)"
@@ -303,8 +304,6 @@ const Index = () => {
 								data={ageChartData}
 								type="age"
 							/>}
-
-
 						</div>
 					</div>
 

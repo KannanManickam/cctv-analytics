@@ -27,9 +27,9 @@ const CountCard: React.FC<CountCardProps> = ({
   preset
 }) => {
   const iconMap = {
-    in: <UserPlus className="h-5 w-5 text-emerald-500" />,
-    out: <UserMinus className="h-5 w-5 text-blue-500" />,
-    total: <Users className="h-5 w-5 text-primary" />
+    in: <UserPlus className="h-5 w-5" style={{ color: '#DD3E62' }} />,
+    out: <UserMinus className="h-5 w-5" style={{ color: '#DD3E62' }} />,
+    total: <Users className="h-5 w-5" style={{ color: '#DD3E62' }} />
   };
 
   const selectedIcon = iconMap[icon];
@@ -53,7 +53,7 @@ const CountCard: React.FC<CountCardProps> = ({
 
   return (
     <Card className={cn(
-      "perspective-hover overflow-hidden border shadow-md", 
+      "perspective-hover overflow-hidden border shadow-md",
       bgStyles[type],
       borderStyles[type],
       className
