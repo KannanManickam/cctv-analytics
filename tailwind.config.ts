@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -26,24 +25,24 @@ export default {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#d946ef',            // Xploro pink/magenta
+          DEFAULT: '#D946EF',            // Magenta pink from logo
           foreground: '#fff'
         },
         secondary: {
-          DEFAULT: '#ffdee2',           // Soft pink
-          foreground: '#d946ef'
+          DEFAULT: '#7E69AB',           // Deep purple from logo
+          foreground: '#fff'
         },
         accent: {
-          DEFAULT: '#ffdee2',
-          foreground: '#d946ef'
+          DEFAULT: '#7E69AB',
+          foreground: '#fff'
         },
         muted: {
-          DEFAULT: '#f3b2d9',
-          foreground: '#cc5499'
+          DEFAULT: '#EFEBF7',           // Very light purple
+          foreground: '#7E69AB'
         },
         card: {
-          DEFAULT: '#ffe6f3',           // Pale/pink
-          foreground: '#d946ef'
+          DEFAULT: '#fff',              // White
+          foreground: '#2A254B'
         },
         popover: {
           DEFAULT: 'hsl(var(--popover))',
@@ -54,14 +53,14 @@ export default {
           foreground: '#fff'
         },
         sidebar: {
-          DEFAULT: '#ffdee2',
-          foreground: '#d946ef',
-          primary: '#d946ef',
+          DEFAULT: '#fff',
+          foreground: '#7E69AB',
+          primary: '#D946EF',
           'primary-foreground': '#fff',
-          accent: '#ffdee2',
-          'accent-foreground': '#d946ef',
-          border: '#f3b2d9',
-          ring: '#d946ef'
+          accent: '#7E69AB',
+          'accent-foreground': '#fff',
+          border: '#EFEBF7',
+          ring: '#D946EF'
         }
       },
       borderRadius: {
@@ -122,10 +121,6 @@ export default {
         'pulse-slow': 'pulse 3s infinite ease-in-out',
         'scale-in': 'scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         'blur-in': 'blur-in 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-      },
-      backdropFilter: {
-        'none': 'none',
-        'blur': 'blur(8px)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

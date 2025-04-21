@@ -11,6 +11,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+// Updated: Use logo palette
+const LOGO_COLORS = {
+  magenta: "#D946EF",  // main
+  purple: "#7E69AB",   // accent
+  aqua: "#4BE3C7",     // vibrant accent (optional secondary)
+  gold: "#FFD275",     // optional highlight
+  slate: "#2A254B",    // rich deep
+  light: "#EFEBF7"     // soft background
+};
+
 interface ChartData {
   name: string;
   value: number;
@@ -58,7 +68,7 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <div className="fancy-blur rounded-lg p-2 text-sm shadow-md border border-gray-200 dark:border-gray-800 min-w-[120px]">
+        <div className="fancy-blur rounded-lg p-2 text-sm shadow-md border border-[var(--border)] min-w-[120px] bg-white dark:bg-gray-900/90">
           <p className="font-medium">{data.name}</p>
           <div className="flex items-center justify-between mt-1">
             <span className="text-muted-foreground text-xs">Percentage:</span>
@@ -73,8 +83,8 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
   return (
     <Card className={cn(
       "perspective-hover border overflow-hidden shadow-md",
-      "bg-gradient-to-br from-gray-50 to-white dark:from-gray-950/30 dark:to-gray-900/80",
-      "border-gray-100 dark:border-gray-800/30",
+      "bg-white dark:bg-gray-900",
+      "border-[var(--border)]",
       className
     )}>
       <CardHeader className="pb-2">
@@ -85,7 +95,7 @@ const DemographicsChart: React.FC<DemographicsChartProps> = ({
               <TooltipTrigger asChild>
                 <Info className="h-4 w-4 text-muted-foreground/70 hover:text-primary cursor-help transition-colors" />
               </TooltipTrigger>
-              <TooltipContent side="top" className="max-w-[200px] text-xs">
+              <TooltipContent side="top" className="max-w-[200px] text-xs bg-white border shadow-lg">
                 {type === "gender" 
                   ? "Gender distribution of visitors based on AI detection" 
                   : "Age distribution of visitors based on AI detection"}

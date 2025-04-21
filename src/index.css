@@ -6,65 +6,53 @@
 
 @layer base {
   :root {
-    --background: 336 100% 91%;              /* Xploro soft pink (#ffdee2) */
-    --foreground: 330 70% 25%;               /* Deeper magenta for text */
-
-    --card: 330 90% 96%;                     /* Slightly lighter pink */
-    --card-foreground: 330 70% 25%;
-
+    --background: 0 0% 100%;           /* Pure white */
+    --foreground: 241 50% 17%;         /* Deep slate from logo text (#2A254B) */
+    --card: 0 0% 100%;                 /* White card */
+    --card-foreground: 241 50% 17%;
     --popover: 0 0% 100%;
-    --popover-foreground: 330 70% 25%;
+    --popover-foreground: 241 50% 17%;
 
-    --primary: 292 83% 60%;                 /* Magenta pink (#d946ef) */
+    --primary: 291 85% 60%;            /* Magenta Pink from logo (#D946EF) */
     --primary-foreground: 0 0% 100%;
+    --secondary: 263 23% 55%;          /* Purple from logo (#7E69AB) */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 276 12% 92%;              /* Very light purple-gray */
+    --muted-foreground: 241 18% 38%;
 
-    --secondary: 336 80% 98%;
-    --secondary-foreground: 330 70% 30%;
-
-    --muted: 330 40% 88%;
-    --muted-foreground: 330 38% 55%;
-
-    --accent: 292 83% 60%;
+    --accent: 263 23% 55%;             /* Purple #7E69AB */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 331 69% 85%;
-    --input: 336 80% 98%;
-    --ring: 292 83% 68%;
+    --border: 263 24% 85%;             /* Subtle purple border */
+    --input: 263 24% 98%;
+    --ring: 291 85% 68%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 336 34% 18%;
-    --foreground: 330 45% 92%;
-
-    --card: 336 34% 22%;
-    --card-foreground: 330 45% 92%;
-
-    --popover: 336 34% 18%;
-    --popover-foreground: 330 45% 92%;
-
-    --primary: 292 83% 60%;
+    --background: 240 10% 8%;          /* Deep navy */
+    --foreground: 0 0% 98%;
+    --card: 240 8% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 291 85% 60%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 335 26% 23%;
-    --secondary-foreground: 330 45% 92%;
-
-    --muted: 335 26% 25%;
-    --muted-foreground: 330 35% 70%;
-
-    --accent: 292 83% 60%;
+    --secondary: 263 21% 27%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 263 23% 22%;
+    --muted-foreground: 241 11% 70%;
+    --accent: 263 23% 55%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 0 70% 41%;
-    --destructive-foreground: 330 45% 92%;
-
-    --border: 335 34% 26%;
-    --input: 335 34% 26%;
-    --ring: 292 83% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 263 24% 27%;
+    --input: 263 24% 27%;
+    --ring: 291 85% 70%;
   }
 }
 
@@ -72,18 +60,17 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-gradient-to-br from-[#ffdee2] via-[#f3b2d9] to-[#d946ef] text-foreground font-sans;
+    @apply bg-white text-foreground font-sans;
   }
 }
 
 .glass-card {
-  @apply bg-white/50 dark:bg-black/30 backdrop-blur-2xl border border-[#ffdee2]/20 dark:border-white/10 shadow-lg;
+  @apply bg-white/60 dark:bg-[#1a1833]/70 backdrop-blur-2xl border border-[var(--border)] shadow-md;
 }
 
 .fancy-blur {
-  @apply backdrop-blur-lg bg-[#fff]/80 dark:bg-[#d946ef]/60 border border-[#ffdee2]/20 dark:border-white/10 shadow-lg;
+  @apply backdrop-blur-lg bg-white/90 dark:bg-[#2c244a]/80 border border-[var(--border)] shadow;
 }
 
 .fancy-stats-grid {
@@ -93,25 +80,23 @@
 }
 
 .perspective-hover {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.23s cubic-bezier(.74,.27,.41,.97), box-shadow 0.25s ease;
 }
-
 .perspective-hover:hover {
-  transform: translateY(-5px) scale(1.01);
-  box-shadow: 0 20px 25px -5px rgb(244 143 177 / 0.1), 0 8px 10px -6px rgb(248 113 113 / 0.15);
+  transform: translateY(-4px) scale(1.013);
+  box-shadow: 0 20px 25px -5px hsla(291,85%,60%,.08), 0 8px 10px -6px rgba(126,105,171,.13);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
-/* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-/* Xploro logo header integration */
+/* Logo header as before */
 .xploro-logo-header {
   width: 48px;
   height: 48px;

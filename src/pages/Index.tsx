@@ -186,20 +186,21 @@ const Index = () => {
     
   }, [selectedLocation, selectedLocationType, selectedDateRange]);
   
+
   // Gender chart data
   const genderChartData = [
-    { name: "Male", value: filteredGender.male, color: "#3b82f6" },
-    { name: "Female", value: filteredGender.female, color: "#ec4899" },
+    { name: "Male", value: filteredGender.male, color: "#7E69AB" },    // purple logo
+    { name: "Female", value: filteredGender.female, color: "#D946EF" } // magenta
   ];
-  
+
   // Age chart data
   const ageChartData = [
-    { name: "0-17", value: filteredAge["0-17"], color: "#60a5fa" },
-    { name: "18-24", value: filteredAge["18-24"], color: "#34d399" },
-    { name: "25-34", value: filteredAge["25-34"], color: "#a78bfa" },
-    { name: "35-44", value: filteredAge["35-44"], color: "#fbbf24" },
-    { name: "45-54", value: filteredAge["45-54"], color: "#f87171" },
-    { name: "55+", value: filteredAge["55+"], color: "#6b7280" }
+    { name: "0-17", value: filteredAge["0-17"], color: "#FFD275" },     // gold accent
+    { name: "18-24", value: filteredAge["18-24"], color: "#4BE3C7" },   // aqua
+    { name: "25-34", value: filteredAge["25-34"], color: "#D946EF" },   // magenta
+    { name: "35-44", value: filteredAge["35-44"], color: "#7E69AB" },   // purple
+    { name: "45-54", value: filteredAge["45-54"], color: "#2A254B" },   // deep slate
+    { name: "55+", value: filteredAge["55+"], color: "#EFEBF7" }        // soft background
   ];
 
   // Calculate daily change percentage
@@ -235,7 +236,7 @@ const Index = () => {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="fancy-blur rounded-lg p-3 text-sm border border-gray-200 dark:border-gray-800 shadow-lg">
+        <div className="fancy-blur rounded-lg p-3 text-sm border border-[var(--border)] shadow-lg bg-white dark:bg-gray-900/80">
           <p className="font-medium">{label}</p>
           <div className="mt-1 space-y-1">
             {payload.map((entry: any, index: number) => (
@@ -256,7 +257,7 @@ const Index = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-white">
       <Header />
 
       <main className="flex-1 px-4 md:px-6 pb-8">
@@ -313,12 +314,12 @@ const Index = () => {
                     >
                       <defs>
                         <linearGradient id="colorIn" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#34d399" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#D946EF" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="#D946EF" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                          <stop offset="5%" stopColor="#7E69AB" stopOpacity={0.2} />
+                          <stop offset="95%" stopColor="#7E69AB" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -338,7 +339,7 @@ const Index = () => {
                       <Area
                         type="monotone"
                         dataKey="In"
-                        stroke="#34d399"
+                        stroke="#D946EF"
                         strokeWidth={2}
                         fillOpacity={1}
                         fill="url(#colorIn)"
@@ -347,7 +348,7 @@ const Index = () => {
                       <Area
                         type="monotone"
                         dataKey="Out"
-                        stroke="#3b82f6"
+                        stroke="#7E69AB"
                         strokeWidth={2}
                         fillOpacity={1}
                         fill="url(#colorOut)"
