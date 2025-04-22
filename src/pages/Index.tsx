@@ -55,7 +55,7 @@ const Index = () => {
 
 	// Filtered data states
 	const [filteredTraffic, setFilteredTraffic] = useState(null);
-	const [filteredChartData, setFilteredChartData] = useState(formatHourlyData(selectedDateRange));
+	const [filteredChartData, setFilteredChartData] = useState([]);
 	const [filteredAge, setFilteredAge] = useState({});
 	const [genderChartData, setGenderChartData] = useState([]);
 
