@@ -30,10 +30,10 @@ type LocationOption = {
 };
 
 const locationTypes = [
-  { id: "store", name: "Store" },
-  { id: "city", name: "City" },
-  { id: "region", name: "Region" },
   { id: "global", name: "Global" },
+  { id: "region", name: "Region" },
+  { id: "city", name: "City" },
+  { id: "store", name: "Store" },
 ];
 
 const apiMap: Record<LocationType, string> = {
