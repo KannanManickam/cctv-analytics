@@ -84,10 +84,13 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => (
 		</nav>
 
 		{/* Logout at bottom */}
-		<div className="px-2 pb-4">
+		<div className="px-2 pb-4 mt-auto">
 			<button
 				className="flex items-center gap-2 px-3 py-2 rounded hover:bg-white/20 transition w-full text-white"
-				onClick={() => window.location.pathname = "/login"}
+				onClick={() => {
+					localStorage.removeItem("accessToken"); // ✅ clear the token
+					window.location.href = "/"; // ✅ redirect to login
+				}}
 			>
 				<LogOut className="mr-2" />
 				Logout

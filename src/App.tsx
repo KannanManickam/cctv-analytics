@@ -9,6 +9,17 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+import { Navigate } from "react-router-dom";
+
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+	const token = localStorage.getItem("accessToken");
+
+	if (!token) {
+		return <Navigate to="/" replace />;
+	}
+	return children;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -16,9 +27,16 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Index />
+              </PrivateRoute>
+            }
+          />
+          {/* CATCH-ALL ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
