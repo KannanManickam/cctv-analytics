@@ -112,7 +112,8 @@ const Index = () => {
 	const [selectedDateRange, setSelectedDateRange] = useState({
 		from: new Date(new Date().setHours(0, 0, 0, 0)),
 		to: new Date(),
-		preset: "today"
+		preset: "today",
+		change: "Yesterday"
 	});
 
 	// Filtered data states
@@ -171,9 +172,16 @@ const Index = () => {
 
 				const { age, gender, graph, summary } = response.data;
 
+				const sort = graph.sort((a, b) => {
+					const timeA = a.hour.split(':').map(Number);
+					const timeB = b.hour.split(':').map(Number);
+					return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+				});
+
 				const genderData = [
 					{ name: "Male", value: parseFloat(gender?.male), color: "#DD3E62" },
 					{ name: "Female", value: parseFloat(gender?.female), color: "#e8748e" },
+					{ name: "None", value: parseFloat(gender?.None), color: "#F29A8B" },
 				];
 				setGenderChartData(genderData);
 
@@ -182,7 +190,7 @@ const Index = () => {
 					rangeValue[item.range] = parseFloat(item.percent);
 				});
 
-				const newChartData = graph.map((item) => ({
+				const newChartData = sort.map((item) => ({
 					name: item.hour,
 					In: item.in,
 					Out: item.out,
@@ -293,7 +301,7 @@ const Index = () => {
 									change={parseFloat(filteredTraffic?.total_in?.change)}
 									type="in"
 									icon="in"
-									preset={selectedDateRange.preset}
+									preset={selectedDateRange.change}
 								/>
 								<CountCard
 									title="Total Out"
@@ -301,7 +309,7 @@ const Index = () => {
 									change={parseFloat(filteredTraffic?.total_out?.change)}
 									type="out"
 									icon="out"
-									preset={selectedDateRange.preset}
+									preset={selectedDateRange.change}
 								/>
 								<CountCard
 									title="Total Visitors"
@@ -309,7 +317,7 @@ const Index = () => {
 									change={parseFloat(filteredTraffic?.total_visitors?.change)}
 									type="total"
 									icon="total"
-									preset={selectedDateRange.preset}
+									preset={selectedDateRange.change}
 								/>
 							</div>
 						)}
