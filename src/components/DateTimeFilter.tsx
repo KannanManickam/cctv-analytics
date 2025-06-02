@@ -53,21 +53,21 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
       case "7days":
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        newRange = { from: sevenDaysAgo, to: new Date(), preset: presetId, change: "7 days" };
+        newRange = { from: sevenDaysAgo, to: new Date(), preset: presetId, change: "prev 7 days" };
         break;
       case "30days":
         const thirtyDaysAgo = new Date(today);
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        newRange = { from: thirtyDaysAgo, to: new Date(), preset: presetId, change: "30 days" };
+        newRange = { from: thirtyDaysAgo, to: new Date(), preset: presetId, change: "prev 30 days" };
         break;
       case "90days":
         const ninetyDaysAgo = new Date(today);
         ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-        newRange = { from: ninetyDaysAgo, to: new Date(), preset: presetId, change: "90 days" };
+        newRange = { from: ninetyDaysAgo, to: new Date(), preset: presetId, change: "prev 90 days" };
         break;
       case "ytd":
         const startOfYear = new Date(today.getFullYear(), 0, 1);
-        newRange = { from: startOfYear, to: new Date(), preset: presetId, change: "YTD" };
+        newRange = { from: startOfYear, to: new Date(), preset: presetId, change: "prev YTD" };
         break;
       case "custom":
         // Don't change the date range, just switch to custom mode
