@@ -8,6 +8,7 @@ import { Camera, ChevronUp, AreaChart as AreaChartIcon, UserSquare, Users } from
 import { trafficData, genderData, ageData } from "@/utils/mockData";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
+import AttendanceChart from "@/components/Attendence";
 import {
 	BarChart,
 	Bar,
@@ -121,6 +122,7 @@ const Index = () => {
 	const [filteredChartData, setFilteredChartData] = useState([]);
 	const [filteredAge, setFilteredAge] = useState({});
 	const [genderChartData, setGenderChartData] = useState([]);
+	const [dateWiseReport, setDateWiseReport] = useState({});
 
 	// Age chart data
 	const ageChartData = [
@@ -185,12 +187,43 @@ const Index = () => {
 				];
 				setGenderChartData(genderData);
 
+				let dateWise = {};
+
+				sort.forEach(item => {
+					const date = item.date;
+					if (!dateWise[date]) {
+						dateWise[date] = { in: 0, out: 0 };
+					}
+					dateWise[date].in += item.in;
+					dateWise[date].out += item.out;
+				});
+
+				setDateWiseReport(dateWise)
+
 				const rangeValue = {};
 				age.forEach(item => {
 					rangeValue[item.range] = parseFloat(item.percent);
 				});
 
-				const newChartData = sort.map((item) => ({
+
+				let hourWise = {};
+
+				sort.forEach(item => {
+					const hour = item.hour;
+					if (!hourWise[hour]) {
+						hourWise[hour] = { in: 0, out: 0 };
+					}
+					hourWise[hour].in += item.in;
+					hourWise[hour].out += item.out;
+				});
+
+				const transformed = Object.entries(hourWise).map(([hour, stats]) => ({
+					hour,
+					in: stats.in,
+					out: stats.out
+				}));
+
+				const newChartData = transformed?.map((item) => ({
 					name: item.hour,
 					In: item.in,
 					Out: item.out,
@@ -324,11 +357,19 @@ const Index = () => {
 
 						{/* Traffic flow chart */}
 						<div className="space-y-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>
-							<div className="flex items-center">
-								<AreaChartIcon className="h-5 w-5 mr-2 text-primary" />
-								<h2 className="text-lg font-semibold tracking-tight">Traffic Flow</h2>
-							</div>
+							<AttendanceChart data={dateWiseReport} />
+
 							<Card className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm overflow-hidden border border-gray-100 dark:border-gray-800/50 shadow-md">
+								<div className="flex flex-col pl-6 pt-4">
+									<div className="flex items-center">
+										<AreaChartIcon className="h-5 w-5 mr-2 text-primary" />
+										<h2 className="text-lg font-semibold tracking-tight">Peak Hour Traffic Analysis</h2>
+									</div>
+									<p className="text-sm text-muted-foreground">
+										Visual breakdown of traffic activity across each hour of the day.
+									</p>
+								</div>
+
 								<CardContent className="p-1 sm:p-3 md:p-6">
 									<div className="h-[300px] w-full">
 										<ResponsiveContainer width="100%" height="100%">

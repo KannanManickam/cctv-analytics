@@ -128,7 +128,6 @@ export const storeLocations = [
 // Time presets
 export const timePresets = [
   { id: "today", name: "Today" },
-  { id: "yesterday", name: "Yesterday" },
   { id: "7days", name: "Last 7 Days" },
   { id: "30days", name: "Last 30 Days" },
   { id: "90days", name: "Last 90 Days" },

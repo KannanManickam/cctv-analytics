@@ -43,13 +43,6 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
       case "today":
         newRange = { from: today, to: new Date(), preset: presetId, change: "Yesterday" };
         break;
-      case "yesterday":
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayEnd = new Date(yesterday);
-        yesterdayEnd.setHours(23, 59, 59, 999);
-        newRange = { from: yesterday, to: yesterdayEnd, preset: presetId, change: "7 days" };
-        break;
       case "7days":
         const sevenDaysAgo = new Date(today);
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
