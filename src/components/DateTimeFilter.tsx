@@ -96,6 +96,18 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
     return `${format(date.from, "MMM d")} - ${format(date.to, "MMM d, yyyy")}`;
   };
 
+  const toStartOfDay = (date: Date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+  };
+
+  const toEndOfDay = (date: Date) => {
+    const d = new Date(date);
+    d.setHours(23, 59, 59, 999);
+    return d;
+  };
+
   return (
     <div className={cn("flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2", className)}>
       <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
@@ -140,11 +152,10 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
             mode="range"
             selected={{ from: date.from, to: date.to }}
             onSelect={(newDate) => {
-              if (newDate) {
-                // Ensure the to property is always defined
+              if (newDate && newDate.from) {
                 const updatedDate: DateRange = {
-                  from: newDate.from,
-                  to: newDate.to || newDate.from, // If to is undefined, use from
+                  from: toStartOfDay(newDate.from),
+                  to: toEndOfDay(newDate.to || newDate.from),
                   preset: "custom"
                 };
                 setDate(updatedDate);

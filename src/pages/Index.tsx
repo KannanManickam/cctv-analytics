@@ -27,8 +27,8 @@ import axios from "axios";
 import {
 	LayoutDashboard,
 	LogOut,
-
 } from "lucide-react";
+import { format } from 'date-fns';
 
 import HlsPlayer from "@/components/HLSPlayer";
 import data from "@/utils/data.json";
@@ -150,8 +150,8 @@ const Index = () => {
 	useEffect(() => {
 		const fetchTrafficData = async () => {
 			try {
-				const fromDate = new Date(selectedDateRange.from).toISOString().slice(0, 10);
-				const toDate = new Date(selectedDateRange.to).toISOString().slice(0, 10);
+				const fromDate = format(selectedDateRange.from, 'yyyy-MM-dd');
+				const toDate = format(selectedDateRange.to, 'yyyy-MM-dd');
 
 				// params: {
 				// 	store_id: 1,
