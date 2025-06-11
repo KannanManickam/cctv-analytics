@@ -30,6 +30,7 @@ import {
 
 } from "lucide-react";
 
+import HlsPlayer from "@/components/HLSPlayer";
 import data from "@/utils/data.json";
 
 // Format hourly data for the chart
@@ -111,7 +112,7 @@ const Index = () => {
 	const [selectedLocationType, setSelectedLocationType] = useState<'store' | 'city' | 'region' | 'global'>("store");
 
 	const [selectedDateRange, setSelectedDateRange] = useState({
-		from: new Date(new Date().setHours(0, 0, 0, 0)),
+		from: new Date(),
 		to: new Date(),
 		preset: "today",
 		change: "Yesterday"
@@ -446,6 +447,8 @@ const Index = () => {
 							</div>
 						</div>
 
+
+						{/* <HlsPlayer src="https://insta-reply.coitor.com/stream/output.m3u8" /> */}
 						{/* Back to top button */}
 						<button
 							onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

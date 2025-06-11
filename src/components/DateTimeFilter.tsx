@@ -26,7 +26,7 @@ interface DateRange {
 
 const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) => {
   const [date, setDate] = useState<DateRange>({
-    from: new Date(new Date().setHours(0, 0, 0, 0)),
+    from: new Date(),
     to: new Date(),
     preset: "today",
   });
@@ -35,8 +35,7 @@ const DateTimeFilter: React.FC<DateTimeFilterProps> = ({ onChange, className }) 
   const [selectedPreset, setSelectedPreset] = useState("today");
 
   const handlePresetSelect = (presetId: string) => {
-    const now = new Date();
-    const today = new Date(now.setHours(0, 0, 0, 0));
+    const today = new Date();
     let newRange: DateRange = { from: undefined, to: undefined, preset: presetId };
 
     switch (presetId) {
