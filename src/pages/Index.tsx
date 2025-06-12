@@ -132,6 +132,7 @@ const Index = () => {
 		{ id: 3, name: "30-39", value: filteredAge["30-39"], color: "#F29A8B" },
 		{ id: 4, name: "40-49", value: filteredAge["40-49"], color: "#F7BBB6" },
 		{ id: 5, name: "50+", value: filteredAge["50+"], color: "#FFD7D2" },   // Lightest
+		{ id: 6, name: "Undisclosed", value: filteredAge["Unknown"] || 0, color: "#CCCCCC" },
 	].sort((a, b) => a.id - b.id); // Ensure data stays in proper order
 
 
@@ -184,7 +185,7 @@ const Index = () => {
 				const genderData = [
 					{ name: "Male", value: parseFloat(gender?.male), color: "#DD3E62" },
 					{ name: "Female", value: parseFloat(gender?.female), color: "#e8748e" },
-					{ name: "None", value: parseFloat(gender?.None), color: "#F29A8B" },
+					{ name: "Undisclosed", value: parseFloat(gender?.None), color: "#F29A8B" },
 				];
 				setGenderChartData(genderData);
 
